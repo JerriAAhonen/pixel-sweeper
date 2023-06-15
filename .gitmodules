@@ -1,0 +1,3 @@
+[submodule "Assets/butler"]
+	path = Assets/butler
+	url = git@github.com:JerriAAhonen/butler.git
