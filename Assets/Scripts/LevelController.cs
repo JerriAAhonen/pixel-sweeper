@@ -87,6 +87,16 @@ public class LevelController : MonoBehaviour
 			grid.EnableDebug(enableGridDebug);
 	}
 
+	public void DestroyGrid()
+	{
+		foreach (Transform child in transform)
+		{
+			Destroy(child.gameObject);
+		}
+
+		grid = null;
+	}
+
 	private void Update()
 	{
         if (grid == null || gameOver)
@@ -95,7 +105,8 @@ public class LevelController : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
 		{
 			var clickPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			grid.GetValue(clickPos, out var gridObject);
+			if (!grid.GetValue(clickPos, out var gridObject))
+				return;
 			grid.GetGridPosition(clickPos, out var gridPosition, true);
 			handeledReavealPositions.Clear();
 			HandleReveal(gridObject, gridPosition);
@@ -104,7 +115,8 @@ public class LevelController : MonoBehaviour
 		if (Input.GetMouseButtonDown(1))
 		{
 			var clickPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			grid.GetValue(clickPos, out var gridObject);
+			if (!grid.GetValue(clickPos, out var gridObject))
+				return;
 			
 			if (gridObject.isRevealed)
 				return;
@@ -156,12 +168,8 @@ public class LevelController : MonoBehaviour
 			gridObj.view.ShowBomb(false);
 		}
 
+		Debug.Log("Game over!");
 		gameOver = true;
-	}
-
-	private void OnDrawGizmos()
-	{
-		//grid?.OnDrawGizmos_DrawDebugData();
 	}
 
 	private List<Vector2Int> GetNeighboursWithoutBombs(Vector2Int origin)

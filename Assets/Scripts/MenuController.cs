@@ -5,9 +5,11 @@ using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour
 {
+	[Header("Pages")]
 	[SerializeField] private CanvasGroup menu;
 	[SerializeField] private CanvasGroup difficultyChoice;
-
+	[SerializeField] private CanvasGroup core;
+	[Header("Buttons")]
 	[SerializeField] private Button play;
 	[SerializeField] private Button difficulty1;
 	[SerializeField] private Button difficulty2;
@@ -15,16 +17,26 @@ public class MenuController : MonoBehaviour
 	//TODO: Custom
 	[SerializeField] private Button exit;
 	[Space]
+	[SerializeField] private Button restartLevel;
+	[SerializeField] private Button toMenu;
+	[Header("References")]
 	[SerializeField] private LevelController levelController;
+
+	private int currentDifficultyLevel;
 
 	private void Start()
 	{
+		// Menu
 		play.onClick.AddListener(OnPlay);
 		difficulty1.onClick.AddListener(() => OnDifficultySelected(0));
 		difficulty2.onClick.AddListener(() => OnDifficultySelected(1));
 		difficulty3.onClick.AddListener(() => OnDifficultySelected(2));
 		exit.onClick.AddListener(OnExit);
-		
+
+		// Core
+		restartLevel.onClick.AddListener(OnRestartLevel);
+		toMenu.onClick.AddListener(OnGoToMenu);
+
 		ShowMenu();
 	}
 
@@ -32,12 +44,14 @@ public class MenuController : MonoBehaviour
 	{
 		menu.SetVisible(true);
 		difficultyChoice.SetVisible(false);
+		core.SetVisible(false);
 	}
 
 	private void HideMenu()
 	{
 		menu.SetVisible(false);
 		difficultyChoice.SetVisible(false);
+		core.SetVisible(true);
 	}
 
 	private void OnPlay()
@@ -48,9 +62,22 @@ public class MenuController : MonoBehaviour
 
 	private void OnDifficultySelected(int difficulty)
 	{
+		currentDifficultyLevel = difficulty;
 		levelController.CreateGrid((DifficultyLevel) difficulty);
 
 		HideMenu();
+	}
+
+	private void OnRestartLevel()
+	{
+		levelController.DestroyGrid();
+		levelController.CreateGrid((DifficultyLevel)currentDifficultyLevel);
+	}
+
+	private void OnGoToMenu()
+	{
+		levelController.DestroyGrid();
+		ShowMenu();
 	}
 
 	private void OnExit()
