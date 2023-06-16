@@ -32,9 +32,9 @@ public class GridTileView : MonoBehaviour
 		foreground.sprite = sb.Flag;
 	}
 
-	public void Explode()
+	public void ShowBomb(bool exploded)
 	{
 		foreground.enabled = true;
-		foreground.sprite = sb.ExplodedBomb;
+		foreground.sprite = exploded ? sb.ExplodedBomb : sb.Bomb;
 	}
 }
